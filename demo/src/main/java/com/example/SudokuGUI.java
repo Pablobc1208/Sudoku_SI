@@ -23,6 +23,7 @@ public class SudokuGUI extends JFrame {
     private final Color PRIMARY_COLOR = new Color(108, 92, 231); // Soft Purple
     private final Color BG_COLOR = new Color(241, 242, 246); // Very Light Gray
     private final Color BUTTON_HOVER = new Color(162, 155, 254);
+    private final UserDAO userDAO = new UserDAO();
 
     private String currentDifficulty = "medium";
 
@@ -46,16 +47,90 @@ public class SudokuGUI extends JFrame {
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
 
-        // Build the two main screens
+        // Build the main screens
+        mainContainer.add(createLoginScreen(), "LoginScreen");
         mainContainer.add(createStartScreen(), "StartScreen");
         mainContainer.add(createGameScreen(), "GameScreen");
 
         add(mainContainer);
 
-        // Show start screen first
-        cardLayout.show(mainContainer, "StartScreen");
+        // Show login screen first
+        cardLayout.show(mainContainer, "LoginScreen");
 
         setVisible(true);
+    }
+
+    /**
+     * Creates the login screen where the user enters credentials.
+     * 
+     * @return The login panel.
+     */
+    private JPanel createLoginScreen() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        panel.setBackground(BG_COLOR);
+        
+        JPanel card = new JPanel();
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+            new EmptyBorder(30, 40, 30, 40)
+        ));
+
+        JLabel title = new JLabel("BIENVENIDO");
+        title.setFont(new Font("SansSerif", Font.BOLD, 28));
+        title.setForeground(PRIMARY_COLOR);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel subtitle = new JLabel("Inicia sesión para jugar");
+        subtitle.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        subtitle.setForeground(Color.GRAY);
+        subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JTextField txtUser = new JTextField();
+        txtUser.setPreferredSize(new Dimension(250, 40));
+        txtUser.setMaximumSize(new Dimension(250, 40));
+        txtUser.setBorder(BorderFactory.createTitledBorder("Usuario"));
+
+        JPasswordField txtPass = new JPasswordField();
+        txtPass.setPreferredSize(new Dimension(250, 40));
+        txtPass.setMaximumSize(new Dimension(250, 40));
+        txtPass.setBorder(BorderFactory.createTitledBorder("Contraseña"));
+
+        JButton btnLogin = createStyledButton("ENTRAR");
+        btnLogin.setFont(new Font("SansSerif", Font.BOLD, 16));
+        btnLogin.setMaximumSize(new Dimension(250, 45));
+        btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        btnLogin.addActionListener(e -> {
+            String user = txtUser.getText().trim();
+            String pass = new String(txtPass.getPassword()).trim();
+            
+            if (user.isEmpty() || pass.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, rellena todos los campos", "Atención", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (userDAO.authenticate(user, pass)) {
+                cardLayout.show(mainContainer, "StartScreen");
+            } else {
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error de Acceso", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        card.add(title);
+        card.add(Box.createRigidArea(new Dimension(0, 5)));
+        card.add(subtitle);
+        card.add(Box.createRigidArea(new Dimension(0, 30)));
+        card.add(txtUser);
+        card.add(Box.createRigidArea(new Dimension(0, 15)));
+        card.add(txtPass);
+        card.add(Box.createRigidArea(new Dimension(0, 30)));
+        card.add(btnLogin);
+
+        panel.add(card);
+        return panel;
     }
 
     /**
