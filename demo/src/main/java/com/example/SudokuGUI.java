@@ -39,7 +39,7 @@ public class SudokuGUI extends JFrame {
      * Initializes and displays the main graphical interface.
      */
     public void startGUI() {
-        setTitle("✨ Sudoku Divertido ✨");
+        setTitle("Sudoku Divertido");
         setSize(600, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -155,7 +155,7 @@ public class SudokuGUI extends JFrame {
         subtitle.setForeground(Color.DARK_GRAY);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton btnStart = createStyledButton("▶ INICIAR JUEGO");
+        JButton btnStart = createStyledButton("INICIAR JUEGO");
         btnStart.setFont(new Font("SansSerif", Font.BOLD, 24));
         btnStart.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnStart.addActionListener(e -> {
@@ -190,8 +190,8 @@ public class SudokuGUI extends JFrame {
         JButton btnEasy = createStyledButton("Fácil");
         JButton btnMedium = createStyledButton("Medio");
         JButton btnHard = createStyledButton("Difícil");
-        JButton btnValidate = createStyledButton("✔ Validar");
-        JButton btnBack = createStyledButton("🔙 Volver");
+        JButton btnValidate = createStyledButton("Validar");
+        JButton btnBack = createStyledButton("Volver");
 
         menuPanel.add(btnBack);
         menuPanel.add(new JLabel(" | "));
@@ -263,7 +263,7 @@ public class SudokuGUI extends JFrame {
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "¡Oh no! Hay errores o el tablero está incompleto.\nReiniciando... ¡Inténtalo de nuevo! 💪",
+                        "¡Oh no! Hay errores o el tablero está incompleto.\nReiniciando... ¡Inténtalo de nuevo!",
                         "Validación Fallida", JOptionPane.ERROR_MESSAGE);
                 generateNewGame(currentDifficulty);
             }
