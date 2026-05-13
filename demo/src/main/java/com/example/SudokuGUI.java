@@ -24,6 +24,8 @@ public class SudokuGUI extends JFrame {
     private final Color BG_COLOR = new Color(241, 242, 246); // Very Light Gray
     private final Color BUTTON_HOVER = new Color(162, 155, 254);
 
+    private String currentDifficulty = "medium";
+
     /**
      * Constructs the GUI components and initializes the game logic.
      */
@@ -165,19 +167,30 @@ public class SudokuGUI extends JFrame {
         gamePanel.add(boardPanel, BorderLayout.CENTER);
 
         // Action Listeners
-        btnEasy.addActionListener(e -> generateNewGame("easy"));
-        btnMedium.addActionListener(e -> generateNewGame("medium"));
-        btnHard.addActionListener(e -> generateNewGame("hard"));
+        btnEasy.addActionListener(e -> {
+            currentDifficulty = "easy";
+            generateNewGame(currentDifficulty);
+        });
+        btnMedium.addActionListener(e -> {
+            currentDifficulty = "medium";
+            generateNewGame(currentDifficulty);
+        });
+        btnHard.addActionListener(e -> {
+            currentDifficulty = "hard";
+            generateNewGame(currentDifficulty);
+        });
         btnBack.addActionListener(e -> cardLayout.show(mainContainer, "StartScreen"));
 
         btnValidate.addActionListener(e -> {
             menuPanel.requestFocus(); // Force focus loss
             if (sudoku.isSolved()) {
-                JOptionPane.showMessageDialog(this, "🎉 CONGRATULATIONS! 🎉\nYou are a Sudoku Master!", "Victory",
+                JOptionPane.showMessageDialog(this, " CONGRATULATIONS! \nYou are a Sudoku Master!", "Victory",
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Keep trying! There are still empty cells or mistakes.",
-                        "Keep going!", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        " Oh no! There are mistakes or the board is incomplete.\nStarting over... Try again! 💪",
+                        "Validation Failed", JOptionPane.ERROR_MESSAGE);
+                generateNewGame(currentDifficulty);
             }
         });
 
