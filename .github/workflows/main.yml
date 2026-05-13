@@ -3,14 +3,14 @@ name: CI/CD Sudoku- GitFlow
 on:
   # Se ejecuta en cada push a la rama de desarrollo para verificar la integración
   push:
-    branches: ["dev", "develop"]
+    branches: ["dev", "develop", "main"] # Añadimos "main" aquí
   # Se ejecuta al crear un Pull Request hacia main
   pull_request:
     branches: ["main"]
 
-# Permisos necesarios para desplegar en GitHub Pages
+# Permisos necesarios para desplegar en GitHub Pages y crear Releases
 permissions:
-  contents: read
+  contents: write # Modificado de read a write para poder crear la Release
   pages: write
   id-token: write
 
@@ -72,3 +72,28 @@ jobs:
       - name: Desplegar en GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  create-release:
+    name: Crear Release en GitHub
+    runs-on: ubuntu-latest
+    needs: [build-and-test] # Espera a que las pruebas pasen
+    # Asegura que SOLO se ejecuta cuando se hace merge/push a main
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Descargar el código (Checkout)
+        uses: actions/checkout@v4
+
+      - name: Crear Release Automática
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: "Release v1.0.${{ github.run_number }}"
+          body: |
+            **Nueva versión generada automáticamente**
+            Esta release se ha creado tras integrar los últimos cambios en la rama `main`.
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
