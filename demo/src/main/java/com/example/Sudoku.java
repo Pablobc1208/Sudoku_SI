@@ -76,6 +76,7 @@ public class Sudoku {
      */
     public boolean isMovementValid(int row, int col, int value) {
         if (value == 0) return true; // Clearing a cell is always valid
+        if (value < 1 || value > 9) return false; // Must be between 1 and 9
 
         // 1. Check Row
         for (int j = 0; j < 9; j++) {

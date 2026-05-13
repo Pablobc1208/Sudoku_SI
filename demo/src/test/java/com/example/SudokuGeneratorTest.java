@@ -41,8 +41,9 @@ public class SudokuGeneratorTest {
 
     @Test
     public void testSolutionValidity() {
+        generator.generateInitialBoard(30); // Ensure a board is generated first
         int[][] solution = generator.getSolution();
-        assertNotNull(solution, "Solution should not be null");
+        assertNotNull(solution, "Solution should not be null after generation");
         
         // Verify it's a valid Sudoku solution
         Sudoku validator = new Sudoku();
