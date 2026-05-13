@@ -37,7 +37,7 @@ public class Sudoku {
                 break;
             default:
                 emptyCells = 45;
-                System.out.println("Unknown difficulty, defaulting to 'medium'.");
+                System.out.println("Dificultad desconocida, usando 'medio' por defecto.");
         }
         
         this.board = generator.generateInitialBoard(emptyCells);
@@ -63,27 +63,28 @@ public class Sudoku {
      * @return true if the movement is valid, false otherwise.
      */
     public boolean isMovementValid(int row, int col, int value) {
-        // Rule 1: Number must not exist in the same row
+        if (value == 0) return true; // Clearing a cell is always valid
+
+        // 1. Check Row
         for (int j = 0; j < 9; j++) {
             if (j != col && board[row][j] == value) {
                 return false;
             }
         }
         
-        // Rule 2: Number must not exist in the same column
+        // 2. Check Column
         for (int i = 0; i < 9; i++) {
             if (i != row && board[i][col] == value) {
                 return false;
             }
         }
         
-        // Rule 3: Number must not exist in the same 3x3 block
+        // 3. Check 3x3 Block
         int startRow = (row / 3) * 3;
         int startCol = (col / 3) * 3;
-        
         for (int i = startRow; i < startRow + 3; i++) {
             for (int j = startCol; j < startCol + 3; j++) {
-                if (i != row && j != col && board[i][j] == value) {
+                if ((i != row || j != col) && board[i][j] == value) {
                     return false;
                 }
             }
@@ -102,15 +103,15 @@ public class Sudoku {
      */
     public boolean placeNumber(int row, int col, int value) {
         if (row < 0 || row >= 9 || col < 0 || col >= 9) {
-            System.out.println("Position out of bounds.");
+            System.out.println("Posición fuera de los límites.");
             return false;
         }
         if (fixedCells[row][col]) {
-            System.out.println("Cannot modify a fixed initial cell.");
+            System.out.println("No se puede modificar una celda inicial fija.");
             return false;
         }
         if (value != 0 && (value < 1 || value > 9)) {
-            System.out.println("Value must be between 1 and 9, or 0 to clear.");
+            System.out.println("El valor debe estar entre 1 y 9, o 0 para limpiar.");
             return false;
         }
         if (value == 0) {
@@ -122,7 +123,7 @@ public class Sudoku {
             board[row][col] = value;
             return true;
         } else {
-            System.out.println("Invalid movement according to Sudoku rules.");
+            System.out.println("¡Movimiento no válido según las reglas del Sudoku!");
             return false;
         }
     }

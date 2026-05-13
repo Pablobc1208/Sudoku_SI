@@ -15,16 +15,16 @@ public class Main {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Select game mode:");
-        System.out.println("1. Console Mode");
-        System.out.println("2. GUI Mode (Swing)");
-        System.out.print("Option: ");
+        System.out.println("Selecciona modo de juego:");
+        System.out.println("1. Modo Consola");
+        System.out.println("2. Modo Interfaz Gráfica (Swing)");
+        System.out.print("Opción: ");
 
         int option = 2; // Default to GUI mode
         try {
             option = Integer.parseInt(scanner.nextLine());
         } catch (Exception e) {
-            System.out.println("Invalid option, defaulting to GUI Mode.");
+            System.out.println("Opción no válida, usando Interfaz Gráfica por defecto.");
         }
 
         if (option == 1) {

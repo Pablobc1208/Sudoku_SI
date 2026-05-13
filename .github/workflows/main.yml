@@ -67,7 +67,7 @@ jobs:
       - name: Subir Javadoc como artefacto de Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "target/site/apidocs" # Ruta por defecto de Javadoc en Maven
+          path: "demo/target/site/apidocs" # Ruta por defecto de Javadoc en Maven
 
       - name: Desplegar en GitHub Pages
         id: deployment

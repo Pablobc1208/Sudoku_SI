@@ -38,7 +38,7 @@ public class SudokuGUI extends JFrame {
      * Initializes and displays the main graphical interface.
      */
     public void startGUI() {
-        setTitle("✨ Fun Sudoku ✨");
+        setTitle("✨ Sudoku Divertido ✨");
         setSize(600, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -75,12 +75,12 @@ public class SudokuGUI extends JFrame {
         title.setForeground(PRIMARY_COLOR);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel subtitle = new JLabel("Ready for a brain challenge?");
+        JLabel subtitle = new JLabel("¿Listo para un desafío mental?");
         subtitle.setFont(new Font("SansSerif", Font.PLAIN, 20));
         subtitle.setForeground(Color.DARK_GRAY);
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JButton btnStart = createStyledButton("▶ START GAME");
+        JButton btnStart = createStyledButton("▶ INICIAR JUEGO");
         btnStart.setFont(new Font("SansSerif", Font.BOLD, 24));
         btnStart.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnStart.addActionListener(e -> {
@@ -112,11 +112,11 @@ public class SudokuGUI extends JFrame {
         JPanel menuPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
         menuPanel.setBackground(BG_COLOR);
 
-        JButton btnEasy = createStyledButton("Easy");
-        JButton btnMedium = createStyledButton("Medium");
-        JButton btnHard = createStyledButton("Hard");
-        JButton btnValidate = createStyledButton("✔ Validate");
-        JButton btnBack = createStyledButton("🔙 Back");
+        JButton btnEasy = createStyledButton("Fácil");
+        JButton btnMedium = createStyledButton("Medio");
+        JButton btnHard = createStyledButton("Difícil");
+        JButton btnValidate = createStyledButton("✔ Validar");
+        JButton btnBack = createStyledButton("🔙 Volver");
 
         menuPanel.add(btnBack);
         menuPanel.add(new JLabel(" | "));
@@ -184,12 +184,12 @@ public class SudokuGUI extends JFrame {
         btnValidate.addActionListener(e -> {
             menuPanel.requestFocus(); // Force focus loss
             if (sudoku.isSolved()) {
-                JOptionPane.showMessageDialog(this, " CONGRATULATIONS! \nYou are a Sudoku Master!", "Victory",
+                JOptionPane.showMessageDialog(this, "¡ENHORABUENA! \n¡Eres un maestro del Sudoku!", "Victoria",
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this,
-                        " Oh no! There are mistakes or the board is incomplete.\nStarting over... Try again! 💪",
-                        "Validation Failed", JOptionPane.ERROR_MESSAGE);
+                        "¡Oh no! Hay errores o el tablero está incompleto.\nReiniciando... ¡Inténtalo de nuevo! 💪",
+                        "Validación Fallida", JOptionPane.ERROR_MESSAGE);
                 generateNewGame(currentDifficulty);
             }
         });
@@ -272,29 +272,42 @@ public class SudokuGUI extends JFrame {
             return;
         }
 
-        if (text == null || text.trim().isEmpty()) {
+        String trimmed = (text == null) ? "" : text.trim();
+        if (trimmed.isEmpty()) {
             sudoku.placeNumber(row, col, 0);
             guiCells[row][col].setForeground(Color.BLACK);
             return;
         }
 
         try {
-            int value = Integer.parseInt(text.trim());
+            int value = Integer.parseInt(trimmed);
 
-            if (value < 1 || value > 9) {
-                guiCells[row][col].setForeground(Color.RED);
+            if (value == 0) {
+                sudoku.placeNumber(row, col, 0);
+                guiCells[row][col].setText("");
+                guiCells[row][col].setForeground(Color.BLACK);
                 return;
             }
 
-            boolean success = sudoku.placeNumber(row, col, value);
-            if (!success) {
-                guiCells[row][col].setForeground(Color.RED); // Red for errors
+            if (value < 1 || value > 9) {
+                guiCells[row][col].setForeground(Color.RED);
+                sudoku.placeNumber(row, col, 0); // Keep motor consistent
+                return;
+            }
+
+            // Sync with motor logic
+            boolean locallyValid = sudoku.isMovementValid(row, col, value);
+            sudoku.getBoard()[row][col] = value; // Update motor regardless to allow "mistakes" on board
+
+            if (!locallyValid) {
+                guiCells[row][col].setForeground(Color.RED); // Red for local conflicts
             } else {
-                guiCells[row][col].setForeground(new Color(9, 132, 227)); // Nice Blue for correct inputs
+                guiCells[row][col].setForeground(new Color(9, 132, 227)); // Nice Blue for valid-looking inputs
             }
 
         } catch (NumberFormatException e) {
             guiCells[row][col].setForeground(Color.RED);
+            sudoku.placeNumber(row, col, 0);
         }
     }
 }
