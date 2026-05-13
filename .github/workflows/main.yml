@@ -1,4 +1,4 @@
-name: CI/CD Pipeline Maven - GitFlow
+name: CI/CD Sudoku- GitFlow
 
 on:
   # Se ejecuta en cada push a la rama de desarrollo para verificar la integración

@@ -31,75 +31,38 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <!-- Maven Surefire Plugin for running tests -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
-            </plugin>
-            
-            <!-- JaCoCo Plugin for Code Coverage -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.10</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugins>
-        <!-- Plugin para generar el Javadoc -->
+    <plugins> <!-- Se abre UNA sola vez -->
+        
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+
+        <!-- Plugin de Javadoc -->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>3.6.3</version>
         </plugin>
 
-        <!-- Plugin de JaCoCo para el reporte de cobertura de pruebas unitarias -->
+        <!-- Plugin de JaCoCo -->
         <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.11</version>
             <executions>
                 <execution>
-                    <goals>
-                        <goal>prepare-agent</goal>
-                    </goals>
+                    <goals><goal>prepare-agent</goal></goals>
                 </execution>
                 <execution>
                     <id>report</id>
                     <phase>test</phase>
-                    <goals>
-                        <goal>report</goal>
-                    </goals>
+                    <goals><goal>report</goal></goals>
                 </execution>
             </executions>
         </plugin>
-    </plugins>
 
-            <!-- Maven Javadoc Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.6.0</version>
-                <configuration>
-                    <show>private</show>
-                    <nohelp>true</nohelp>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    </plugins> <!-- Se cierra al final -->
+</build>
 
 </project>
