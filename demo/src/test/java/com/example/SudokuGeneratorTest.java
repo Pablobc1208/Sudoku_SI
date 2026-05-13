@@ -38,4 +38,20 @@ public class SudokuGeneratorTest {
         assertTrue(actualEmptyCells > 0, "Board should have empty cells");
         assertTrue(actualEmptyCells <= emptyCells, "Board should not have more empty cells than requested");
     }
+
+    @Test
+    public void testSolutionValidity() {
+        int[][] solution = generator.getSolution();
+        assertNotNull(solution, "Solution should not be null");
+        
+        // Verify it's a valid Sudoku solution
+        Sudoku validator = new Sudoku();
+        // Manually fill the board to bypass fixed cells check if any
+        int[][] board = validator.getBoard();
+        for (int i = 0; i < 9; i++) {
+            System.arraycopy(solution[i], 0, board[i], 0, 9);
+        }
+        
+        assertTrue(validator.isSolved(), "The generated solution must be a valid solved Sudoku board");
+    }
 }

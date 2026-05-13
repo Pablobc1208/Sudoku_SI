@@ -91,5 +91,56 @@ public class SudokuTest {
     public void testIsSolved() {
         // Empty board is not solved
         assertFalse(sudoku.isSolved(), "Empty board should not be considered solved.");
+        
+        // Load solution into board
+        sudoku.generateBoard("easy");
+        int[][] solution = sudoku.getSolutionBoard();
+        int[][] board = sudoku.getBoard();
+        
+        for (int i = 0; i < 9; i++) {
+            System.arraycopy(solution[i], 0, board[i], 0, 9);
+        }
+        
+        assertTrue(sudoku.isSolved(), "Board filled with its solution should be considered solved.");
+        
+        // Introduce an error
+        int originalValue = board[0][0];
+        board[0][0] = (originalValue % 9) + 1; // Change to a different valid number
+        if (board[0][0] == originalValue) board[0][0] = (originalValue == 1) ? 2 : 1;
+        
+        assertFalse(sudoku.isSolved(), "Board with an incorrect number should not be solved.");
+    }
+
+    @Test
+    public void testDifficultyLevels() {
+        sudoku.generateBoard("easy");
+        int easyEmpty = countEmptyCells();
+        
+        sudoku.generateBoard("medium");
+        int mediumEmpty = countEmptyCells();
+        
+        sudoku.generateBoard("hard");
+        int hardEmpty = countEmptyCells();
+        
+        assertTrue(easyEmpty < mediumEmpty, "Easy should have fewer empty cells than medium.");
+        assertTrue(mediumEmpty < hardEmpty, "Medium should have fewer empty cells than hard.");
+    }
+
+    @Test
+    public void testInvalidMovements() {
+        assertFalse(sudoku.isMovementValid(0, 0, 10), "10 is not a valid Sudoku number.");
+        assertFalse(sudoku.isMovementValid(0, 0, -1), "-1 is not a valid Sudoku number.");
+        assertTrue(sudoku.isMovementValid(0, 0, 0), "0 (clear) is always valid.");
+    }
+
+    private int countEmptyCells() {
+        int count = 0;
+        int[][] board = sudoku.getBoard();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == 0) count++;
+            }
+        }
+        return count;
     }
 }

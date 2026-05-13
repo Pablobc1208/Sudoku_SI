@@ -39,7 +39,7 @@ public class SudokuGUI extends JFrame {
      * Initializes and displays the main graphical interface.
      */
     public void startGUI() {
-        setTitle("Sudoku Divertido");
+        setTitle("Sudoku");
         setSize(600, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -51,14 +51,14 @@ public class SudokuGUI extends JFrame {
         mainContainer.add(createLoginScreen(), "LoginScreen");
         mainContainer.add(createStartScreen(), "StartScreen");
         mainContainer.add(createGameScreen(), "GameScreen");
-        
+
         // Add Victory Screen with callbacks
         mainContainer.add(new VictoryScreen(
-            () -> { // On Play Again
-                generateNewGame(currentDifficulty);
-                cardLayout.show(mainContainer, "GameScreen");
-            },
-            () -> cardLayout.show(mainContainer, "StartScreen") // On Go to Menu
+                () -> { // On Play Again
+                    generateNewGame(currentDifficulty);
+                    cardLayout.show(mainContainer, "GameScreen");
+                },
+                () -> cardLayout.show(mainContainer, "StartScreen") // On Go to Menu
         ), "WinScreen");
 
         add(mainContainer);
@@ -78,14 +78,13 @@ public class SudokuGUI extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         panel.setBackground(BG_COLOR);
-        
+
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-            new EmptyBorder(30, 40, 30, 40)
-        ));
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                new EmptyBorder(30, 40, 30, 40)));
 
         JLabel title = new JLabel("BIENVENIDO");
         title.setFont(new Font("SansSerif", Font.BOLD, 28));
@@ -111,20 +110,22 @@ public class SudokuGUI extends JFrame {
         btnLogin.setFont(new Font("SansSerif", Font.BOLD, 16));
         btnLogin.setMaximumSize(new Dimension(250, 45));
         btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
+
         btnLogin.addActionListener(e -> {
             String user = txtUser.getText().trim();
             String pass = new String(txtPass.getPassword()).trim();
-            
+
             if (user.isEmpty() || pass.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Por favor, rellena todos los campos", "Atención", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Por favor, rellena todos los campos", "Atención",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (userDAO.authenticate(user, pass)) {
                 cardLayout.show(mainContainer, "StartScreen");
             } else {
-                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error de Acceso", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error de Acceso",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -287,16 +288,19 @@ public class SudokuGUI extends JFrame {
                             }
                         }
                     }
-                    
+
                     if (foundCorrect) {
-                        JOptionPane.showMessageDialog(this, "Se han bloqueado los números correctos.", "Validación", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Se han bloqueado los números correctos.", "Validación",
+                                JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(this, "No hay números correctos nuevos o el tablero tiene errores.", "Validación", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this,
+                                "No hay números correctos nuevos o el tablero tiene errores.", "Validación",
+                                JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(this,
-                        "¡Oh no! Hay errores o el tablero está incompleto.\nReiniciando... ¡Inténtalo de nuevo!",
-                        "Validación Fallida", JOptionPane.ERROR_MESSAGE);
+                            "¡Oh no! Hay errores o el tablero está incompleto.\nReiniciando... ¡Inténtalo de nuevo!",
+                            "Validación Fallida", JOptionPane.ERROR_MESSAGE);
                     generateNewGame(currentDifficulty);
                 }
             }
