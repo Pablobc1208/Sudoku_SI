@@ -2,10 +2,13 @@
 
 ```mermaid
 stateDiagram-v2
-    [*] --> InitGame
+    [*] --> LoginScreen
     
-    InitGame --> SelectDifficulty : User selects mode
-    SelectDifficulty --> GenerateBoard : easy, medium, hard
+    LoginScreen --> Authenticate : User enters credentials
+    Authenticate --> LoginScreen : [Invalid Credentials] Show Error
+    Authenticate --> StartScreen : [Valid Credentials] Success
+    
+    StartScreen --> GenerateBoard : User clicks "INICIAR JUEGO"
     
     GenerateBoard --> PlayTurn : Board generated with fixed cells
     

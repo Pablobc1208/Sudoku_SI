@@ -9,7 +9,6 @@ classDiagram
         +isMovementValid(int row, int col, int value) boolean
         +placeNumber(int row, int col, int value) boolean
         +isSolved() boolean
-        +printBoard() void
         +getBoard() int[][]
         +getFixedCells() boolean[][]
     }
@@ -25,15 +24,24 @@ classDiagram
         -removeCells(int count) void
     }
 
-    class SudokuConsoleGame {
-        -Sudoku sudoku
-        +start() void
+    class DatabaseConnection {
+        -String CONFIG_FILE
+        -Properties properties
+        +static getConnection() Connection
+    }
+
+    class UserDAO {
+        +authenticate(String email, String pass) boolean
     }
 
     class SudokuGUI {
         -Sudoku sudoku
+        -UserDAO userDAO
         -JTextField[][] guiCells
         +startGUI() void
+        -createLoginScreen() JPanel
+        -createStartScreen() JPanel
+        -createGameScreen() JPanel
         -generateNewGame(String difficulty) void
         -updateBoardUI() void
         -handleUserInput(int row, int col, String text) void
@@ -54,9 +62,9 @@ classDiagram
     }
 
     Sudoku --> SudokuGenerator : uses
-    SudokuConsoleGame --> Sudoku : manages
     SudokuGUI --> Sudoku : manages
-    Main --> SudokuConsoleGame : launches
+    SudokuGUI --> UserDAO : uses for auth
+    UserDAO --> DatabaseConnection : gets connection
     Main --> SudokuGUI : launches
     SudokuTest --> Sudoku : tests
 ```

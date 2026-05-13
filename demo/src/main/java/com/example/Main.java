@@ -1,7 +1,6 @@
 package com.example;
 
 import javax.swing.SwingUtilities;
-import java.util.Scanner;
 
 /**
  * Main entry point for the Sudoku application.
