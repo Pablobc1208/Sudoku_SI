@@ -51,6 +51,15 @@ public class SudokuGUI extends JFrame {
         mainContainer.add(createLoginScreen(), "LoginScreen");
         mainContainer.add(createStartScreen(), "StartScreen");
         mainContainer.add(createGameScreen(), "GameScreen");
+        
+        // Add Victory Screen with callbacks
+        mainContainer.add(new VictoryScreen(
+            () -> { // On Play Again
+                generateNewGame(currentDifficulty);
+                cardLayout.show(mainContainer, "GameScreen");
+            },
+            () -> cardLayout.show(mainContainer, "StartScreen") // On Go to Menu
+        ), "WinScreen");
 
         add(mainContainer);
 
@@ -259,8 +268,7 @@ public class SudokuGUI extends JFrame {
         btnValidate.addActionListener(e -> {
             menuPanel.requestFocus(); // Force focus loss
             if (sudoku.isSolved()) {
-                JOptionPane.showMessageDialog(this, "¡ENHORABUENA! \n¡Eres un maestro del Sudoku!", "Victoria",
-                        JOptionPane.INFORMATION_MESSAGE);
+                cardLayout.show(mainContainer, "WinScreen");
             } else {
                 // In hard mode, lock correct numbers when validating
                 if (currentDifficulty.equalsIgnoreCase("hard")) {
@@ -426,6 +434,11 @@ public class SudokuGUI extends JFrame {
                 } else {
                     guiCells[row][col].setForeground(new Color(9, 132, 227));
                 }
+            }
+
+            // Automatic win check after user input
+            if (sudoku.isSolved()) {
+                cardLayout.show(mainContainer, "WinScreen");
             }
 
         } catch (NumberFormatException e) {
