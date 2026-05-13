@@ -8,14 +8,15 @@ public class SudokuGUITest {
 
     @Test
     public void testGUIInitialization() {
-        // Skip test in headless environments (like some CI/CD) to prevent HeadlessException
+        // Skip test in headless environments (like some CI/CD) to prevent
+        // HeadlessException
         if (GraphicsEnvironment.isHeadless()) {
             return;
         }
-        
+
         assertDoesNotThrow(() -> {
             SudokuGUI gui = new SudokuGUI();
-            // We do not call startGUI() to avoid popping up a window during maven tests, 
+            // We do not call startGUI() to avoid popping up a window during maven tests,
             // but we ensure the object can be created without exceptions.
             assertNotNull(gui);
         });
