@@ -8,6 +8,7 @@ import java.util.Random;
 public class SudokuGenerator {
 
     private int[][] board;
+    private int[][] solution;
     private Random random;
 
     /**
@@ -40,10 +41,20 @@ public class SudokuGenerator {
         // 3. Solve the rest of the Sudoku using backtracking
         solveSudoku(board);
 
+        // Save solution
+        solution = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            System.arraycopy(board[i], 0, solution[i], 0, 9);
+        }
+
         // 4. Remove cells randomly according to difficulty
         removeCells(emptyCells);
 
         return board;
+    }
+
+    public int[][] getSolution() {
+        return solution;
     }
 
     /**

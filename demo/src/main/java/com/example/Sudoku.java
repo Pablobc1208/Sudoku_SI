@@ -6,13 +6,15 @@ package com.example;
  */
 public class Sudoku {
     private int[][] board;
+    private int[][] solutionBoard;
     private boolean[][] fixedCells;
 
     /**
-     * Initializes an empty 9x9 Sudoku board and its fixed cells matrix.
+     * Initializes an empty 9x9 Sudoku board, its solution, and fixed cells.
      */
     public Sudoku() {
         this.board = new int[9][9];
+        this.solutionBoard = new int[9][9];
         this.fixedCells = new boolean[9][9];
     }
 
@@ -41,6 +43,7 @@ public class Sudoku {
         }
         
         this.board = generator.generateInitialBoard(emptyCells);
+        this.solutionBoard = generator.getSolution();
         
         // Mark the initial generated cells as fixed
         for (int i = 0; i < 9; i++) {
@@ -52,6 +55,15 @@ public class Sudoku {
                 }
             }
         }
+    }
+
+    /**
+     * Retrieves the solution board matrix.
+     * 
+     * @return The 9x9 integer matrix representing the solution.
+     */
+    public int[][] getSolutionBoard() {
+        return solutionBoard;
     }
 
     /**
@@ -194,5 +206,18 @@ public class Sudoku {
      */
     public boolean[][] getFixedCells() {
         return fixedCells;
+    }
+
+    /**
+     * Sets a cell as fixed or not.
+     * 
+     * @param row   The row index.
+     * @param col   The column index.
+     * @param fixed true to lock the cell, false to unlock.
+     */
+    public void setFixed(int row, int col, boolean fixed) {
+        if (row >= 0 && row < 9 && col >= 0 && col < 9) {
+            this.fixedCells[row][col] = fixed;
+        }
     }
 }

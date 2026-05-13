@@ -262,10 +262,35 @@ public class SudokuGUI extends JFrame {
                 JOptionPane.showMessageDialog(this, "¡ENHORABUENA! \n¡Eres un maestro del Sudoku!", "Victoria",
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this,
+                // In hard mode, lock correct numbers when validating
+                if (currentDifficulty.equalsIgnoreCase("hard")) {
+                    int[][] board = sudoku.getBoard();
+                    int[][] solution = sudoku.getSolutionBoard();
+                    boolean foundCorrect = false;
+
+                    for (int i = 0; i < 9; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            if (!sudoku.getFixedCells()[i][j] && board[i][j] != 0 && board[i][j] == solution[i][j]) {
+                                guiCells[i][j].setForeground(new Color(46, 204, 113)); // Green
+                                guiCells[i][j].setEditable(false);
+                                guiCells[i][j].setBackground(new Color(232, 248, 245));
+                                sudoku.setFixed(i, j, true);
+                                foundCorrect = true;
+                            }
+                        }
+                    }
+                    
+                    if (foundCorrect) {
+                        JOptionPane.showMessageDialog(this, "Se han bloqueado los números correctos.", "Validación", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No hay números correctos nuevos o el tablero tiene errores.", "Validación", JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this,
                         "¡Oh no! Hay errores o el tablero está incompleto.\nReiniciando... ¡Inténtalo de nuevo!",
                         "Validación Fallida", JOptionPane.ERROR_MESSAGE);
-                generateNewGame(currentDifficulty);
+                    generateNewGame(currentDifficulty);
+                }
             }
         });
 
@@ -372,12 +397,35 @@ public class SudokuGUI extends JFrame {
 
             // Sync with motor logic
             boolean locallyValid = sudoku.isMovementValid(row, col, value);
-            sudoku.getBoard()[row][col] = value; // Update motor regardless to allow "mistakes" on board
 
-            if (!locallyValid) {
-                guiCells[row][col].setForeground(Color.RED); // Red for local conflicts
+            // Check against solution for easy/medium
+            int solutionValue = sudoku.getSolutionBoard()[row][col];
+            boolean isCorrect = (value == solutionValue);
+
+            if (currentDifficulty.equalsIgnoreCase("easy") || currentDifficulty.equalsIgnoreCase("medium")) {
+                if (isCorrect) {
+                    guiCells[row][col].setText(String.valueOf(value));
+                    guiCells[row][col].setForeground(new Color(46, 204, 113)); // Green
+                    guiCells[row][col].setEditable(false);
+                    guiCells[row][col].setBackground(new Color(232, 248, 245)); // Light green background
+                    sudoku.getBoard()[row][col] = value;
+                    sudoku.setFixed(row, col, true); // Lock it in the logic too
+                } else {
+                    sudoku.getBoard()[row][col] = value;
+                    if (!locallyValid) {
+                        guiCells[row][col].setForeground(Color.RED);
+                    } else {
+                        guiCells[row][col].setForeground(new Color(9, 132, 227));
+                    }
+                }
             } else {
-                guiCells[row][col].setForeground(new Color(9, 132, 227)); // Nice Blue for valid-looking inputs
+                // Hard mode: just update board and show as normal input
+                sudoku.getBoard()[row][col] = value;
+                if (!locallyValid) {
+                    guiCells[row][col].setForeground(Color.RED);
+                } else {
+                    guiCells[row][col].setForeground(new Color(9, 132, 227));
+                }
             }
 
         } catch (NumberFormatException e) {
